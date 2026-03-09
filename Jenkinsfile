@@ -13,9 +13,8 @@ pipeline {
     environment {
         IMAGE_NAME    = "zhehaochen/frontend-service"
         GIT_SHORT     = "${env.GIT_COMMIT?.take(7) ?: 'unknown'}"
-        APP_VERSION   = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
-        // Primary tag: v1.0.0-build.42-git-abc1234
-        IMAGE_TAG     = "v${APP_VERSION}-build.${env.BUILD_NUMBER}-git.${GIT_SHORT}"
+        // Primary tag: build.42-git-abc1234
+        IMAGE_TAG     = "build.${env.BUILD_NUMBER}-git.${GIT_SHORT}"
         // Environment-specific alias tag
         ENV_TAG       = "${env.BRANCH_NAME == 'main' ? 'prod-latest' : env.BRANCH_NAME == 'develop' ? 'dev-latest' : 'staging-latest'}"
     }
@@ -104,13 +103,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo "Pipeline succeeded: ${env.BRANCH_NAME} -> ${env.IMAGE_TAG}"
-            script { notifyGithub('success', 'Pipeline passed') }
-        }
-        failure {
-            echo "Pipeline failed on branch: ${env.BRANCH_NAME}"
-            script { notifyGithub('failure', 'Pipeline failed') }
-        }
+        success { echo "Pipeline succeeded: ${env.BRANCH_NAME} -> ${env.IMAGE_TAG}" }
+        failure  { echo "Pipeline failed on branch: ${env.BRANCH_NAME}" }
     }
 }
