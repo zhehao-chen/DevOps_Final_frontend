@@ -83,7 +83,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>E-Commerce Demo</h1>
+        <h1>E-Commerce Demo v1.1.0</h1>
         <div className="cart-badge">Cart: {cart.length}</div>
       </header>
       
